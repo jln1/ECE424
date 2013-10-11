@@ -28,3 +28,22 @@ void vTaskCalculateOrientation(void *pvParameters)
       vTaskDelayUntil(&wakeTime, frequency);
   }
 }
+
+// Recoded semaphore creation
+void FreeRTOS_Configuration(void)
+{
+ 
+  // Create semaphore
+  xSemaphoreHandle dataSemaphore = NULL;
+  vSemaphoreCreateBinary(dataSemaphore);
+    
+  // Task Creations
+  xTaskCreate(vTaskDetectEmergency, NULL, 100, NULL, (tskIDLE_PRIORITY + 5), NULL);
+  xTaskCreate(vTaskRefreshSensorData, NULL, 100, NULL, (tskIDLE_PRIORITY + 4), NULL);
+  xTaskCreate(vTaskCalculateOrientation, NULL, 100, NULL, (tskIDLE_PRIORITY + 3), NULL);
+  //xTaskCreate(vTaskUpdatePid, NULL, 100, NULL, (tskIDLE_PRIORITY + 2), NULL);
+  xTaskCreate(vTaskLogDebugInfo, NULL, 100, NULL, (tskIDLE_PRIORITY + 1), NULL);
+  xTaskCreate(vTaskRLED, NULL, 100, NULL, tskIDLE_PRIORITY, NULL);
+  xTaskCreate(vTaskGLED, NULL, 100, NULL, tskIDLE_PRIORITY, NULL);
+  
+}
