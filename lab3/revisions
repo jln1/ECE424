@@ -1,0 +1,30 @@
+void vTaskRefreshSensorData(void *pvParameters)
+{
+  // Initialize delay wake time 
+  portTickType wakeTime;
+  portTickType frequency = 100;
+  wakeTime = xTaskGetTickCount();
+
+  // Execute & delay
+  while(1){
+  	RefreshSensorData();
+  	xSemaphoreGive(dataSemaphore);
+  	vTaskDelayUntil(&waketime, frequency); 
+  }
+}
+
+void vTaskCalculateOrientation(void *pvParameters)
+{
+  // Initialize delay wake time 
+  portTickType wakeTime;
+  portTickType frequency = 100;
+  wakeTime = xTaskGetTickCount();
+  
+  // Execute & delay
+  while(1){
+    // Block until available
+    if(xSemaphoreTake(dataSemaphore, portMAX_DELAY) == pdTRUE),
+      calculateOrientation();
+      vTaskDelayUntil(&wakeTime, frequency);
+  }
+}
